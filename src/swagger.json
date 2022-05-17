@@ -1,0 +1,354 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Atlas",
+        "description": "This is a documentation about Atlas API",
+        "version": "1.0.0",
+        "contact": {
+            "email": "fukudaum@gmail.com"
+        }
+    },
+    "paths": {
+        "/users": {
+            "post": {
+                "tags": ["User"],
+                "summary": "Create a User",
+                "requestBody":{
+                    "description": "Necessary fields to create an user",
+                    "required": true,   
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "email": {
+                                        "type": "string"
+                                    }
+                                },
+                                "example": {
+                                    "name": "John doe",
+                                    "email": "johndoe@gmail.com"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Created",                        
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "admin": {
+                                            "type": "boolean"
+                                        },
+                                        "id": {
+                                            "type": "string"
+                                        },
+                                        "name": {
+                                            "type": "string"
+                                        },
+                                        "email": {
+                                            "type": "string"
+                                        },
+                                        "created_at": {
+                                            "type": "string"
+                                        },
+                                        "updated_at": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "example": 
+                                        {
+                                            "admin": false,                              
+                                            "id": "cbf62820-897e-4326-83cl-78df16c5723c",          
+                                            "name": "John doe",                                            
+                                            "email": "johndoe@gmail.com",
+                                            "created_at": "2022-05-17T14:36:0000",
+                                            "updated_at": "2022-05-17T14:36:0000"
+                                        }                                    
+                                }
+                            }
+                        }                        
+                    },
+                    "400": {
+                        "description": "Email already exists!",
+                        "content": {
+                            "application/json": {     
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "string"
+                                        }
+                                    },                                    
+                                    "example": {
+                                        "error": "Email already exists!"
+                                    }                                    
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "get": {
+                "tags": ["User"],
+                "summary": "List all users",
+                "parameters": [
+                    {
+                        "in": "header",
+                        "name": "user_id",
+                        "required": true,
+                        "description": "User Id",
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],                
+                "description": "Just admin can access",
+                "responses": {
+                    "202": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items":{
+                                        "type": "object",
+                                        "properties": {
+                                            "admin": {
+                                                "type": "boolean"
+                                            },
+                                            "id": {
+                                                "type": "string"
+                                            },
+                                            "name": {
+                                                "type": "string"
+                                            },
+                                            "email": {
+                                                "type": "string"
+                                            },
+                                            "created_at": {
+                                                "type": "string"
+                                            },
+                                            "updated_at": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "example": [
+                                            {
+                                                "admin": false,                              
+                                                "id": "cbf62820-897e-4326-83cl-78df16c5723c",          
+                                                "name": "John doe",                                            
+                                                "email": "johndoe@gmail.com",
+                                                "created_at": "2022-05-17T14:36:0000",
+                                                "updated_at": "2022-05-17T14:36:0000"
+                                            },
+                                            {
+                                                "admin": true,                               
+                                                "id": "d32e9e4e-43cd-4f64-a393-4f0158c9e348",         
+                                                "name": "John hue",
+                                                "email": "johnhue@gmail.com",
+                                                "created_at": "2022-05-17T14:36:0000",
+                                                "updated_at": "2022-05-17T14:46:0000"
+                                            }                                           
+                                        ]                                 
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "User not found or User without permission!",
+                        "content": {
+                            "application/json": {     
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "string"
+                                        }    
+                                    }
+                                },
+                                "example": [
+                                    {
+                                        "error": "User not found!"
+                                    },
+                                    {
+                                        "error": "You dont have permission!"
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                }
+
+            }
+        },
+        "/users/{user_id}": {
+            "get":{
+                "tags": ["User"],
+                "summary": "Return an especific user",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "user_id",
+                        "required": true,
+                        "description": "User Id",
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success", 
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "admin": {
+                                            "type": "boolean"
+                                        },
+                                        "id": {
+                                            "type": "string"
+                                        },
+                                        "name": {
+                                            "type": "string"
+                                        },
+                                        "email": {
+                                            "type": "string"
+                                        },
+                                        "created_at": {
+                                            "type": "string"
+                                        },
+                                        "updated_at": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "example": {
+                                            "admin": false,                              
+                                            "id": "cbf62820-897e-4326-83cl-78df16c5723c",          
+                                            "name": "John doe",                                            
+                                            "email": "johndoe@gmail.com",
+                                            "created_at": "2022-05-17T14:36:0000",
+                                            "updated_at": "2022-05-17T14:36:0000"
+                                    }                                       
+                                }
+                            }
+                        }                        
+                    },
+                    "400": {
+                        "description": "User not found!",
+                        "content": {
+                            "application/json": {     
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "example": [
+                                    {
+                                        "error": "User not found!"
+                                    },
+                                    {
+                                        "error": "You dont have permission!"
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                }                
+
+            }            
+        },        
+        "/users/{user_id}/admin": {            
+            "patch":{
+                "tags": ["User"],
+                "summary": "Turns an user in Admin",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "user_id",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "admin": {
+                                            "type": "boolean"
+                                        },
+                                        "id": {
+                                            "type": "string"
+                                        },
+                                        "name": {
+                                            "type": "string"
+                                        },
+                                        "email": {
+                                            "type": "string"
+                                        },
+                                        "created_at": {
+                                            "type": "string"
+                                        },
+                                        "updated_at": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "example": {
+                                            "admin": true,                              
+                                            "id": "cbf62820-897e-4326-83cl-78df16c5723c",          
+                                            "name": "John doe",                                            
+                                            "email": "johndoe@gmail.com",
+                                            "created_at": "2022-05-17T14:36:0000",
+                                            "updated_at": "2022-05-17T14:36:0000"
+                                    }                                       
+                                }
+                            }
+                        }                                                
+                    },
+                    "404": {
+                        "description": "User not found!",
+                        "content": {
+                            "application/json": {     
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "example": [
+                                    {
+                                        "error": "User not found!"
+                                    }
+                                ]
+                            }
+                        }
+                    }                    
+                }
+            }            
+        }
+    }
+}
